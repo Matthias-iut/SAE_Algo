@@ -1,0 +1,58 @@
+import java.util.Arrays;
+import java.util.Random;
+
+public class Tris {
+
+    public static void main(String[] args) {
+        //int[] données = générerDonnéesEntreBornes(50, 0, 20);
+        //System.out.println(Arrays.toString(données));
+
+        int[] données = générerDonnées(200000);
+
+        long tempsDébut = System.nanoTime();
+        //triParInsertion(données); // trie le tableau en utilisant le tri par insertion
+        triParSelection(données); // trie le tableau en utilisant le tri par sélection
+        long tempsFin = System.nanoTime();
+
+        System.out.println("Temps de calcul en millisecondes: " + ((tempsFin - tempsDébut) / 1000000) );
+
+//        System.out.println(Arrays.toString(données));
+    }
+
+
+    public static void triParInsertion(int[] tab){
+        int j, pivot;
+        for (int i=tab.length-1; i>=0; i--){
+            j=i;
+            pivot=tab[i];
+            while(j>=1 && tab[j-1]>tab[i]){
+                tab[j]=tab[j-1];
+                j--;
+            }
+            tab[j]=pivot;
+        }
+        System.out.println("Tri par insertion effectué.");
+    }
+
+    public static void triParSelection (int[] tab){
+        int posMin, pivot;
+        for(int i=0; i<tab.length-1; i++){
+            posMin = i;
+            for(int j=i; j<tab.length; j++){
+                if(tab[j]<tab[posMin]) posMin=j;
+            }
+            pivot=tab[i];
+            tab[i]=tab[posMin];
+            tab[posMin]=pivot;
+        }
+        System.out.println("Tri par sélection effectué.");
+    }
+
+    public static int[] générerDonnées(int n) {
+        Random random = new Random();
+        int[] t = new int[n];
+        for (int i = 0 ; i < t.length ; i++)
+            t[i] = random.nextInt(); // tirage aléatoire d'un int quelconque (compris entre -2^31 et 2^31-1)
+        return t;
+    }
+}
