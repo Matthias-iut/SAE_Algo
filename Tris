@@ -7,11 +7,13 @@ public class Tris {
         //int[] données = générerDonnéesEntreBornes(50, 0, 20);
         //System.out.println(Arrays.toString(données));
 
-        int[] données = générerDonnées(200000);
+        int[] données = générerDonnées(6);
 
         long tempsDébut = System.nanoTime();
         //triParInsertion(données); // trie le tableau en utilisant le tri par insertion
-        triParSelection(données); // trie le tableau en utilisant le tri par sélection
+        //triParSelection(données); // trie le tableau en utilisant le tri par sélection
+        //triAPeigne(données);
+        triComptage(données);
         long tempsFin = System.nanoTime();
 
         System.out.println("Temps de calcul en millisecondes: " + ((tempsFin - tempsDébut) / 1000000) );
@@ -47,7 +49,60 @@ public class Tris {
         }
         System.out.println("Tri par sélection effectué.");
     }
+    public static void triAPeigne (int[] tab){
+        double gap=tab.length;
+        int pivot;
+        boolean echangé;
+        do{
+            echangé=false;
+            gap=gap/1.3;
+            if (gap<1) gap=1;
+            for(int i=0; i<tab.length-gap; i++){
+                if (tab[i]>tab[(int)(Math.floor(i+gap))]){
+                    pivot=tab[i];
+                    tab[i]=tab[(int)(Math.floor(i+gap))];
+                    tab[(int)(Math.floor(i+gap))]=pivot;
+                    echangé=true;
+                }
+            }
+        }while (echangé || gap>1);
+        System.out.println("Tri à peigne effectué.");
+    }
 
+    public static void triComptage (int[] tab){
+        int min = tab[0], maj= tab[0];
+        for (int i=0; i<tab.length; i++){
+            if (tab[i]>maj) maj=tab[i];
+            if (tab[i]<min) min=tab[i];
+        }
+        // On crée le tabCompteur et on l'initialise
+        int[] tabCompteur = new int[Math.abs(maj)+Math.abs(min)];
+        for (int i=0; i<tabCompteur.length; i++)
+            tabCompteur[i]=0;
+        // On décompte
+        for (int i=0; i<tab.length; i++){
+            tabCompteur[Math.abs(tab[i])+Math.abs(min)]+=1;
+            if (maj<0 && min<0) tabCompteur[Math.abs(tab[i])+Math.abs(min)]+=1;
+            if (maj>0 && min<0) tabCompteur[tab[i]+Math.abs(min)]+=1;
+            else tabCompteur[tab[i]+min]+=1;
+        }
+        int j;
+        int k=0;
+        for (int i=0; i<tabCompteur.length; i++){
+            j=0;
+            while(j<tabCompteur[i]){
+                if (maj<0 && min<0) tab[k]=-i-min;
+                if (maj>0 && min<0) tab[k]=i-min;
+                else tab[k]=i+min;
+                k++;
+                j++;
+            }
+        }
+        for (int s: tab)
+            System.out.print(s);
+        System.out.println("Tri comptage effectué.");
+    }
+    
     public static int[] générerDonnées(int n) {
         Random random = new Random();
         int[] t = new int[n];
