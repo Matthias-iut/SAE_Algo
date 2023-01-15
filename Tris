@@ -7,18 +7,23 @@ public class Tris {
         //int[] données = générerDonnéesEntreBornes(50, 0, 20);
         //System.out.println(Arrays.toString(données));
 
-        int[] données = générerDonnées(6);
+        int[] données = générerDonnées(100000000);
+        int[] centPlusGrandesValeurs = new int[100];
 
         long tempsDébut = System.nanoTime();
         //triParInsertion(données); // trie le tableau en utilisant le tri par insertion
         //triParSelection(données); // trie le tableau en utilisant le tri par sélection
         //triAPeigne(données);
-        triComptage(données);
+        //triComptage(données);
+        //CentPlusGrandesValeurs(données, centPlusGrandesValeurs);
+        CentPlusGrandesValeursJavaSort(données, centPlusGrandesValeurs);
         long tempsFin = System.nanoTime();
-
         System.out.println("Temps de calcul en millisecondes: " + ((tempsFin - tempsDébut) / 1000000) );
 
-//        System.out.println(Arrays.toString(données));
+        for (int s : centPlusGrandesValeurs)
+            System.out.print(s+ " ");
+        System.out.println("\nFin");
+        //System.out.println(Arrays.toString(données));
     }
 
 
@@ -76,6 +81,7 @@ public class Tris {
             if (tab[i]<min) min=tab[i];
         }
         // On crée le tabCompteur et on l'initialise
+        // Problème : le nombre maximum d'éléments qu'un tableau peut avoir est inférieur à Math.abs(maj)+Math.abs(min)
         int[] tabCompteur = new int[Math.abs(maj)+Math.abs(min)];
         for (int i=0; i<tabCompteur.length; i++)
             tabCompteur[i]=0;
@@ -102,7 +108,24 @@ public class Tris {
             System.out.print(s);
         System.out.println("Tri comptage effectué.");
     }
-    
+
+    public static void CentPlusGrandesValeurs (int[] tab, int[] CentValeurs){
+        int pivot, posMaj;
+        for(int i=0; i<100; i++){
+            posMaj = i;
+            for (int j=i; j<tab.length; j++)
+                if (tab[j]>tab[posMaj]) posMaj=j;
+            pivot = tab[i];
+            tab[i]=tab[posMaj];
+            tab[posMaj]=pivot;
+            CentValeurs[i]=tab[i];
+        }
+    }
+    public static void CentPlusGrandesValeursJavaSort(int[] tab, int[]CentValeurs){
+        Arrays.sort(tab);
+        for(int i=tab.length-1; i>tab.length-101; i--)
+            CentValeurs[tab.length-i-1]=tab[i];
+    }
     public static int[] générerDonnées(int n) {
         Random random = new Random();
         int[] t = new int[n];
