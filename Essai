@@ -8,31 +8,79 @@ import java.util.stream.Collectors;
 public class Tris {
 
     public static void main(String[] args) {
-        //int[] données = générerDonnéesEntreBornes(50, 0, 20);
+        int[] données = générerDonnéesEntreBornes(100000000, 0, 1000);
         //System.out.println(Arrays.toString(données));
 
-        int[] données = générerDonnées(100000000);
+        //int[] données = générerDonnées(10);
         int[] centPlusGrandesValeurs = new int[100];
 
         //triParInsertion(données); // trie le tableau en utilisant le tri par insertion
         //triParSelection(données); // trie le tableau en utilisant le tri par sélection
         //triAPeigne(données);
         //triComptage(données);
-
-
-        long tempsDébut = System.nanoTime();
         //CentPlusGrandesValeursJavaSort(données, centPlusGrandesValeurs);
         //quicksort(0, données.length-1, données);
         //CentPlusGrandesValeurs(données, centPlusGrandesValeurs);
+        long tempsDébut = System.nanoTime();
+        centPlusGrandesValeurs = triOpti(données, 100);
         long tempsFin = System.nanoTime();
 
         System.out.println("Temps de calcul en millisecondes: " + ((tempsFin - tempsDébut) / 1000000) );
 
-        //for (int s : centPlusGrandesValeurs)
-        //    System.out.print(s+ " ");
+        for (int s : centPlusGrandesValeurs)
+            System.out.print(s+ " ");
         System.out.println("\nFin");
         //System.out.println(Arrays.toString(données));
     }
+
+    public static int[] triOpti(int[] tab, int nbMajorant){
+        int intervalle = tab.length/2;
+        int [] nbValeur = new int [nbMajorant];
+        int majg =0, tempG;
+        int majd =tab.length-1;
+        int nbval = 0;
+        int pivot =0;
+        int grandMaj ;
+        int direction = 0;//0 gauche, 1 droite
+
+        for (int i = nbval; i < intervalle; i++)
+            if (tab[i] > tab[majg]) majg = i;
+        for (int j = intervalle; j < tab.length; j++)
+            if (tab[j] > tab[majd]) majd = j;
+
+        while(nbval<nbMajorant) {
+            if(tab[majd] > tab[majg]) {
+                direction = 1;
+                grandMaj = majd;
+            }else {
+                direction = 0;
+                grandMaj = majg;
+            }
+            tempG = tab[majg];
+            nbValeur[nbval] = tab[grandMaj];
+            pivot =  tab[grandMaj];
+            tab[grandMaj]  = tab[nbval];
+            tab[nbval] = pivot;
+            nbval++;
+
+            if(direction==1 && tab[grandMaj] == tab[majg]) {
+                majg = nbval;
+                for (int i = nbval; i < intervalle; i++)
+                    if (tab[i] > tab[majg]) majg = i;
+            }
+            if(nbval<nbMajorant) {
+                if (direction == 0) {
+                    for (int i = nbval; i < intervalle; i++)
+                        if (tab[i] > tab[majg]) majg = i;
+                } else {
+                    for (int j = intervalle; j < tab.length; j++)
+                        if (tab[j] > tab[majd]) majd = j;
+                }
+            }
+        }
+        return nbValeur;
+    }
+
 
     public static void CentPlusGrandesValeurs (int[] tab, int[] CentValeurs){
         int pivot, posMaj;
@@ -65,7 +113,13 @@ public class Tris {
         }
         System.out.println("Tri par insertion effectué.");
     }
-
+    public static int[] générerDonnéesEntreBornes(int n, int min, int max) {
+        Random random = new Random();
+        int[] t = new int[n];
+        for (int i = 0 ; i < t.length ; i++)
+            t[i] = random.nextInt(max-min+1)+min; // nextInt(borne) retourne un int compris entre 0 inclus et borne exclus.
+        return t;
+    }
     /**
     public static void quickSort(int[] ar, int start, int end) {
         if (start <end) {
@@ -188,4 +242,5 @@ public class Tris {
         return t;
     }
 }
+
 
